@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
+from .db import db, migrate
+from .models.board import Board
 import os
 # Import models, blueprints, and anything else needed to set up the app or database
 
@@ -14,7 +16,8 @@ def create_app(config=None):
         app.config.update(config)
 
     # Initialize app with SQLAlchemy db and Migrate
-
+    db.init_app(app)
+    migrate.init_app(app, db)
     # Register Blueprints 
 
     CORS(app)
