@@ -9,14 +9,8 @@ boards_bp = Blueprint("boards_bp", __name__, url_prefix="/boards")
 @boards_bp.post("")
 def create_board():
     request_body = request.get_json()
-    title = request_body["title"]
-    owner = request_body["owner"]
 
-    new_board = Board(title=title, owner=owner)
-    db.session.add(new_board)
-    db.session.commit()
-    response = new_board.to_dict()
-    return response, 201
+    return create_model(Board, request_body)
 
 @boards_bp.get("")
 def get_all_boards():
@@ -28,21 +22,37 @@ def get_all_boards():
     return results_list
 
 @boards_bp.get("/<board_id>")
-def get_one_board(board_id):
-    board = validate_board(board_id)
+def get_single_board(board_id):
+    board = validate_model(Board, board_id)
     return board.to_dict(), 200
 
-def validate_board(board_id):
+def validate_model(cls, model_id):
 
     # checks for valid input
     try: 
-        board_id = int(board_id)
+        model_id = int(model_id)
     except: 
-        abort(make_response({"message": f"Board id {board_id} not found"}, 400))
+        abort(make_response({"message": f"{cls.__name__} id {model_id} is invalid"}, 400))
 
-    board = Board.query.get(board_id)
-    # returns task with the corresponding task_id
-    if not board:
-        abort(make_response({"message": f"Board id {board_id} not found"}, 404))
+    query = db.select(cls).where(cls.id == model_id)
+    model = db.session.scalar(query)
 
-    return board
+    # returns board with the corresponding board_id
+    if not model:
+        abort(make_response({"message": f"{cls.__name__} {model_id} not found."}, 404))
+
+    return model
+
+def create_model(cls, model_data):
+    try:
+        new_model = cls.from_dict(model_data)
+        
+    except KeyError as error:
+        response = {"details": "Invalid data"}
+        abort(make_response(response, 400))
+    
+    db.session.add(new_model)
+    db.session.commit()
+
+    return {cls.__name__.lower(): new_model.to_dict()}, 201
+

@@ -4,13 +4,13 @@ from sqlalchemy import ForeignKey
 from typing import Optional
 
 class Board(db.Model):
-    board_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] 
     owner: Mapped[str]
 
     def to_dict(self):
         board_dict = dict(
-            id=self.board_id,
+            id=self.id,
             title=self.title,
             owner=self.owner,
         )
@@ -20,6 +20,6 @@ class Board(db.Model):
     @classmethod
     def from_dict(cls, board_data):
         return cls(
-            title=self.title,
-            owner=self.owner,
+            title=board_data["title"],
+            owner=board_data["owner"],
         )
