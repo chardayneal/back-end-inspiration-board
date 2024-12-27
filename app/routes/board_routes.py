@@ -27,10 +27,24 @@ def get_all_boards():
 def get_single_board(board_id):
     board = validate_model(Board, board_id)
 
-    return board.to_dict(), 200
+    response = {"board": board.to_dict()}
+
+    return response, 200
+
+@boards_bp.put("/<board_id>")
+def update_board(board_id):
+    board = validate_model(Board, board_id)
+
+    request_body = request.get_json()
+    board.title = request_body["title"]
+    board.owner = request_body["owner"]
+
+    db.session.commit()
+
+    return {"board": board.to_dict()}
 
 @boards_bp.delete("/<board_id>")
-def delete_task(board_id):
+def delete_board(board_id):
     board = validate_model(Board, board_id)
 
     db.session.delete(board)
