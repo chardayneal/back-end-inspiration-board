@@ -66,6 +66,7 @@ def create_board_ids_by_card(card_id):
             board = validate_model(Board, board_id)
             card.boards.append(board)
         db.session.commit()
+        
     except KeyError as error:
         response = {"details": "Invalid data"}
         abort(make_response(response, 400))
