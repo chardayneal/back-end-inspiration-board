@@ -5,7 +5,7 @@ from flask.signals import request_finished
 from dotenv import load_dotenv
 import os
 from app.models.board import Board
-# from app.models.card import Card
+from app.models.card import Card
 
 load_dotenv()
 
@@ -35,6 +35,7 @@ def app():
 def client(app):
     return app.test_client()
 
+
 @pytest.fixture
 def one_board(app):
     new_board = Board(title="New Years Eve Vacation", 
@@ -53,20 +54,13 @@ def three_boards(app):
     db.session.commit()
 
 
-
-@pytest.fixture
-def completed_board(app):
-    new_board = Board(title="Go on my daily walk 🏞", 
-                    Owner="Notice something new every day")
-    db.session.add(new_board)
-    db.session.commit()
-
-
 @pytest.fixture
 def one_card(app):
-    new_card = Card(title="If you think you will, you will!")
+    new_card = Card(message="Interior design examples",
+                    like_count=5)
     db.session.add(new_card)
     db.session.commit()
+
 
 @pytest.fixture
 def one_board_belongs_to_one_card(app, one_card, one_board):
