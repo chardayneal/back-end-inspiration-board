@@ -41,7 +41,7 @@ def test_post_card_ids_to_board_already_with_boards(client, one_card_belongs_to_
     assert len(board.cards) == 2
     assert any(card.message == "New Card Message" for card in board.cards)
 
-# @pytest.mark.skip
+
 def test_get_cards_for_specific_board_no_board(client):
     # Act
     response = client.get("/boards/1/cards")
@@ -53,7 +53,7 @@ def test_get_cards_for_specific_board_no_board(client):
         "message": "Board 1 not found."
     }
 
-# @pytest.mark.skip
+
 def test_get_cards_for_specific_board_no_cards(client, one_board):
     # Act
     response = client.get("/boards/1/cards")
@@ -70,7 +70,7 @@ def test_get_cards_for_specific_board_no_cards(client, one_board):
         "cards": []
     }
 
-# @pytest.mark.skip
+
 def test_get_cards_for_specific_board(client, one_card_belongs_to_one_board):
     # Act
     response = client.get("/boards/1/cards")
@@ -93,7 +93,7 @@ def test_get_cards_for_specific_board(client, one_card_belongs_to_one_board):
         ]
     }
 
-# @pytest.mark.skip
+
 def test_get_card_includes_board_id(client, one_card_belongs_to_one_board):
     response = client.get("/cards/1")
     response_body = response.get_json()

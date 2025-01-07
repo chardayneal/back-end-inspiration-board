@@ -55,36 +55,6 @@ def delete_card(card_id):
 
     return response, 200
 
-# @cards_bp.post("/<card_id>/boards")
-# def create_board_ids_by_card(card_id):
-#     request_body = request.get_json()
-#     card = validate_model(Card, card_id)
-
-#     try:
-#         board_ids = request_body["board_ids"]
-#         for board_id in board_ids:
-#             board = validate_model(Board, board_id)
-#             card.boards.append(board)
-#         db.session.commit()
-        
-#     except KeyError as error:
-#         response = {"details": "Invalid data"}
-#         abort(make_response(response, 400))
-
-#     return {"id": card.id, "board_ids": board_ids}
-
-# @cards_bp.get("/<card_id>/boards")
-# def get_boards_by_card(card_id):
-#     card = validate_model(Card, card_id)
-#     card_dict = card.to_dict()
-#     card_dict["boards"] = []
-
-#     for board in card.boards:
-#         card_dict["boards"].append(board.to_dict())
-
-#     return card_dict
-
-
 @cards_bp.patch("/<card_id>/like")
 def like_card(card_id):
     card = validate_model(Card, card_id)

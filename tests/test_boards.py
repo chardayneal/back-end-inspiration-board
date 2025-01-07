@@ -40,7 +40,8 @@ def test_get_board(client, one_board):
             "id": 1,
             "title": "New Years Eve Vacation",
             "owner": "Bella Hilton"
-        }
+        },
+        "cards": []
     }
 
 def test_get_board_not_found(client):
@@ -122,7 +123,6 @@ def test_update_board(client, one_board):
     assert board.owner == "Updated Test Description"
 
 
-# @pytest.mark.skip(reason="No way to test this feature yet")
 def test_update_board_not_found(client):
     # Act
     response = client.put("/boards/1", json={

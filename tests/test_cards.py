@@ -4,7 +4,6 @@ from app.db import db
 import pytest
 
 
-
 def test_get_cards_no_saved_cards(client):
     # Act
     response = client.get("/cards")
@@ -14,8 +13,6 @@ def test_get_cards_no_saved_cards(client):
     assert response.status_code == 200
     assert response_body == []
 
-
-# @pytest.mark.skip
 
 def test_get_cards_one_saved_card(client, one_card):
     # Act
@@ -52,7 +49,7 @@ def test_get_card(client, one_card):
         }
     }
 
-# @pytest.mark.skip
+
 def test_get_card_not_found(client):
     # Act
     response = client.get("/cards/1")
@@ -63,7 +60,7 @@ def test_get_card_not_found(client):
     assert response_body == {"message":"Card 1 not found."}
 
 
-# @pytest.mark.skip
+
 def test_create_card(client, one_board):
     board_id = one_board.id
 
@@ -87,7 +84,7 @@ def test_create_card(client, one_board):
     }
 
 
-# @pytest.mark.skip
+
 def test_update_card(client, one_card):
     # Act
     response = client.put("/cards/1", json={"message": "Updated Card Message", "like_count": 2})
@@ -108,7 +105,7 @@ def test_update_card(client, one_card):
     assert card.like_count == 2
 
 
-# @pytest.mark.skip
+
 def test_update_card_not_found(client):
     # Act
     response = client.put("/cards/1", json={"message": "Updated Card Message"})
@@ -118,7 +115,7 @@ def test_update_card_not_found(client):
     assert response.status_code == 404
     assert response_body == {"message":"Card 1 not found."}
 
-# @pytest.mark.skip
+
 def test_delete_card(client, one_card):
     # Act
     response = client.delete("/cards/1")
@@ -138,7 +135,7 @@ def test_delete_card(client, one_card):
     assert response_body == {"message":"Card 1 not found."}
 
 
-# @pytest.mark.skip
+
 def test_delete_card_not_found(client):
     # Act
     response = client.delete("/cards/1")
@@ -149,7 +146,7 @@ def test_delete_card_not_found(client):
     assert response_body == {"message":"Card 1 not found."}
 
 
-# @pytest.mark.skip
+
 def test_create_card_missing_message(client):
     # Act
     response = client.post("/cards", json={})

@@ -24,11 +24,22 @@ def get_all_boards():
 
     return results_list
 
+# @boards_bp.get("/<board_id>")
+# def get_single_board(board_id):
+#     board = validate_model(Board, board_id)
+
+#     response = {"board": board.to_dict()}
+
+#     return response, 200
+
 @boards_bp.get("/<board_id>")
 def get_single_board(board_id):
     board = validate_model(Board, board_id)
 
-    response = {"board": board.to_dict()}
+    response = {
+        "board": board.to_dict(),
+        "cards": [card.to_dict() for card in board.cards]
+    }
 
     return response, 200
 
@@ -80,18 +91,6 @@ def create_card_for_board(board_id):
     except KeyError:
         response = {"details": "Invalid data"}
         abort(make_response(response, 400))
-
-
-# @boards_bp.get("/<board_id>/cards")
-# def get_cards_by_board(board_id):
-#     board = validate_model(Board, board_id)
-#     board_dict = board.to_dict()
-#     board_dict["cards"] = []
-
-#     for card in board.cards:
-#         board_dict["cards"].append(card.to_dict())
-
-#     return board_dict, 200
 
 @boards_bp.get("/<board_id>/cards")
 def get_cards_by_board(board_id):
