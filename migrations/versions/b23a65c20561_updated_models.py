@@ -1,8 +1,8 @@
-"""Updated one to many relationship and create card model
+"""updated models
 
-Revision ID: 79ba3317af76
+Revision ID: b23a65c20561
 Revises: 
-Create Date: 2025-01-02 13:52:06.586255
+Create Date: 2025-01-07 14:53:22.419463
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '79ba3317af76'
+revision = 'b23a65c20561'
 down_revision = None
 branch_labels = None
 depends_on = None

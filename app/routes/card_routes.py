@@ -10,13 +10,15 @@ import os
 cards_bp = Blueprint("cards_bp", __name__, url_prefix="/cards")
 
 @cards_bp.post("")
-def create_card():
+def create_card(): #creates a card
     request_body = request.get_json()
+    response = create_model(Card, request_body) #where card gets created
 
-    return create_model(Card, request_body)
+    return response
+
 
 @cards_bp.get("")
-def get_all_cards():
+def get_all_cards(): # get all the cards
     query = db.select(Card).order_by(Card.id)
     cards = db.session.scalars(query)
 
@@ -25,7 +27,7 @@ def get_all_cards():
     return response, 200
 
 @cards_bp.get("/<card_id>")
-def get_single_card(card_id):
+def get_single_card(card_id): # gets one card 
     card = validate_model(Card, card_id)
 
     response = {"card": card.to_dict()}
@@ -33,7 +35,7 @@ def get_single_card(card_id):
     return response, 200
 
 @cards_bp.put("/<card_id>")
-def update_card(card_id):
+def update_card(card_id): #updates a card
     card = validate_model(Card, card_id)
 
     request_body = request.get_json()
@@ -46,7 +48,7 @@ def update_card(card_id):
     return response, 200
 
 @cards_bp.delete("/<card_id>")
-def delete_card(card_id):
+def delete_card(card_id): #deletes a card
     card = validate_model(Card, card_id)
     db.session.delete(card)
 
@@ -56,7 +58,7 @@ def delete_card(card_id):
     return response, 200
 
 @cards_bp.post("/<card_id>/boards")
-def create_board_ids_by_card(card_id):
+def create_board_ids_by_card(card_id): # associate multiple Board objects with a specific Card by receiving a list of board_ids in the request body.
     request_body = request.get_json()
     card = validate_model(Card, card_id)
 
@@ -74,7 +76,7 @@ def create_board_ids_by_card(card_id):
     return {"id": card.id, "board_ids": board_ids}
 
 @cards_bp.get("/<card_id>/boards")
-def get_boards_by_card(card_id):
+def get_boards_by_card(card_id): # fetches card id to associate board 
     card = validate_model(Card, card_id)
     card_dict = card.to_dict()
     card_dict["boards"] = []
