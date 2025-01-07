@@ -1,110 +1,109 @@
-from app.models.card import Card
+from app.models.board import Board
+from app.db import db
 import pytest
 
-
-def test_post_board_ids_to_card(client, one_card, three_boards):
+def test_post_card_ids_to_board(client, one_board, three_cards):
     # Act
-    response = client.post("/cards/1/boards", json={
-        "board_ids": [1, 2, 3]
+    response = client.post("/boards/1/cards", json={
+        "message": "A new card message",
+        "like_count": 0 
     })
     response_body = response.get_json()
 
     # Assert
-    assert response.status_code == 200
-    assert "id" in response_body
-    assert "board_ids" in response_body
+    assert response.status_code == 201
+    assert "board_id" in response_body
+    assert "card" in response_body
+    assert "id" in response_body["card"] 
     assert response_body == {
-        "id": 1,
-        "board_ids": [1, 2, 3]
+        "board_id": 1,
+        "card": {
+            "id": 4,  
+            "message": "A new card message",
+            "like_count": 0
+        }
     }
 
-    # Check that Card was updated in the db
-    assert len(Card.query.get(1).boards) == 3
 
-
-def test_post_board_ids_to_card_already_with_cards(client, one_board_belongs_to_one_card, three_boards):
-    # Act
-    response = client.post("/cards/1/boards", json={
-        "board_ids": [1, 4]
+def test_post_card_ids_to_board_already_with_boards(client, one_card_belongs_to_one_board, three_boards):
+    response = client.post("/boards/1/cards", json={
+        "message": "New Card Message",
+        "like_count": 0
     })
     response_body = response.get_json()
 
-    # Assert
-    assert response.status_code == 200
-    assert "id" in response_body
-    assert "board_ids" in response_body
-    assert response_body == {
-        "id": 1,
-        "board_ids": [1, 4]
-    }
-    assert len(Card.query.get(1).boards) == 2
+    assert response.status_code == 201
+    assert "card" in response_body
+    assert response_body["card"]["message"] == "New Card Message"
+    assert response_body["card"]["like_count"] == 0
 
+    board = db.session.get(Board, 1)
+    assert len(board.cards) == 2
+    assert any(card.message == "New Card Message" for card in board.cards)
 
-def test_get_boards_for_specific_card_no_card(client):
+# @pytest.mark.skip
+def test_get_cards_for_specific_board_no_board(client):
     # Act
-    response = client.get("/cards/1/boards")
+    response = client.get("/boards/1/cards")
     response_body = response.get_json()
 
     # Assert
     assert response.status_code == 404
     assert response_body == {
-        "message": "Card 1 not found."
+        "message": "Board 1 not found."
     }
 
-
-def test_get_boards_for_specific_card_no_boards(client, one_card):
+# @pytest.mark.skip
+def test_get_cards_for_specific_board_no_cards(client, one_board):
     # Act
-    response = client.get("/cards/1/boards")
+    response = client.get("/boards/1/cards")
     response_body = response.get_json()
 
     # Assert
     assert response.status_code == 200
-    assert "boards" in response_body
-    assert len(response_body["boards"]) == 0
+    assert "cards" in response_body
+    assert len(response_body["cards"]) == 0
     assert response_body == {
         "id": 1,
-        "message": "Interior design examples",
-        "like_count": 5,
-        "boards": []
+        "title": "New Years Eve Vacation",
+        "owner": "Bella Hilton",  
+        "cards": []
     }
 
-
-def test_get_boards_for_specific_card(client, one_board_belongs_to_one_card):
+# @pytest.mark.skip
+def test_get_cards_for_specific_board(client, one_card_belongs_to_one_board):
     # Act
-    response = client.get("/cards/1/boards")
+    response = client.get("/boards/1/cards")
     response_body = response.get_json()
 
     # Assert
     assert response.status_code == 200
-    assert "boards" in response_body
-    assert len(response_body["boards"]) == 1
+    assert "cards" in response_body
+    assert len(response_body["cards"]) == 1
     assert response_body == {
-        "id": 1,
-        "message": "Interior design examples",
-        "like_count": 5,
-        "boards": [
+        "id": 1,  # Include the board ID
+        "title": "Board 1",
+        "owner": "Owner 1",
+        "cards": [
             {
                 "id": 1,
-                # "card_id": 1,
-                "title": "New Years Eve Vacation",
-                "owner": "Bella Hilton"
+                "message": "Interior design examples",
+                "like_count": 5
             }
         ]
     }
 
-
-def test_get_board_includes_card_id(client, one_board_belongs_to_one_card):
-    response = client.get("/boards/1")
+# @pytest.mark.skip
+def test_get_card_includes_board_id(client, one_card_belongs_to_one_board):
+    response = client.get("/cards/1")
     response_body = response.get_json()
 
     assert response.status_code == 200
-    assert "board" in response_body
-    # assert "card_id" in response_body["board"]
+    assert "card" in response_body
     assert response_body == {
-        "board": {
+        "card": {
             "id": 1,
-            # "card_id": 1,
-            "title": "New Years Eve Vacation",
-            "owner": "Bella Hilton"
+            "message": "Interior design examples",
+            "like_count": 5
         }
     }

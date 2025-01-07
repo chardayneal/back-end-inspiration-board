@@ -17,18 +17,18 @@ with my_app.app_context():
     db.session.add(Board(title="Flavors of Love", owner="Jack"))
     db.session.add(Board(title="Harmony at Home", owner="Kim"))
 
-    # seeds data into Card table
-    db.session.add(Card(message="Dream Big", like_count=12))
-    db.session.add(Card(message="Adventure Awaits", like_count=45))
-    db.session.add(Card(message="Chasing Goals", like_count=30))
-    db.session.add(Card(message="Moments of Joy", like_count=67))
-    db.session.add(Card(message="Strength and Growth", like_count=23))
-    db.session.add(Card(message="Pages of Inspiration", like_count=56))
-    db.session.add(Card(message="Wanderlust Dreams", like_count=89))
-    db.session.add(Card(message="Sparkling Clean", like_count=34))
-    db.session.add(Card(message="Balanced Living", like_count=50))
-    db.session.add(Card(message="Flavors of Love", like_count=76))
-    db.session.add(Card(message="Harmony at Home", like_count=41))
+    # # seeds data into Card table
+    # db.session.add(Card(message="Dream Big", like_count=12))
+    # db.session.add(Card(message="Adventure Awaits", like_count=45))
+    # db.session.add(Card(message="Chasing Goals", like_count=30))
+    # db.session.add(Card(message="Moments of Joy", like_count=67))
+    # db.session.add(Card(message="Strength and Growth", like_count=23))
+    # db.session.add(Card(message="Pages of Inspiration", like_count=56))
+    # db.session.add(Card(message="Wanderlust Dreams", like_count=89))
+    # db.session.add(Card(message="Sparkling Clean", like_count=34))
+    # db.session.add(Card(message="Balanced Living", like_count=50))
+    # db.session.add(Card(message="Flavors of Love", like_count=76))
+    # db.session.add(Card(message="Harmony at Home", like_count=41))
 
 
 

@@ -1,11 +1,13 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..db import db
+from sqlalchemy import ForeignKey
 
 class Card(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     message: Mapped[str]
     like_count: Mapped[int]
-    boards: Mapped[list["Board"]] = relationship(back_populates="card")
+    board_id: Mapped[int] = mapped_column(ForeignKey("board.id"))
+    board: Mapped["Board"] = relationship("Board", back_populates="cards")
 
     def to_dict(self):
         card_dict = dict(

@@ -15,6 +15,7 @@ def test_get_cards_no_saved_cards(client):
     assert response_body == []
 
 
+# @pytest.mark.skip
 
 def test_get_cards_one_saved_card(client, one_card):
     # Act
@@ -33,6 +34,7 @@ def test_get_cards_one_saved_card(client, one_card):
     ]
 
 
+# @pytest.mark.skip
 
 def test_get_card(client, one_card):
     # Act
@@ -50,7 +52,7 @@ def test_get_card(client, one_card):
         }
     }
 
-
+# @pytest.mark.skip
 def test_get_card_not_found(client):
     # Act
     response = client.get("/cards/1")
@@ -61,12 +63,14 @@ def test_get_card_not_found(client):
     assert response_body == {"message":"Card 1 not found."}
 
 
+# @pytest.mark.skip
+def test_create_card(client, one_board):
+    board_id = one_board.id
 
-def test_create_card(client):
     # Act
-    response = client.post("/cards", json={
+    response = client.post(f'/boards/{board_id}/cards', json={
         "message": "My New Card",
-        "like_count": 5
+        "like_count": 5,
     })
     response_body = response.get_json()
 
@@ -78,11 +82,12 @@ def test_create_card(client):
             "id": 1,
             "message": "My New Card",
             "like_count": 5
-        }
+        },
+        "board_id": 1
     }
 
 
-
+# @pytest.mark.skip
 def test_update_card(client, one_card):
     # Act
     response = client.put("/cards/1", json={"message": "Updated Card Message", "like_count": 2})
@@ -103,7 +108,7 @@ def test_update_card(client, one_card):
     assert card.like_count == 2
 
 
-
+# @pytest.mark.skip
 def test_update_card_not_found(client):
     # Act
     response = client.put("/cards/1", json={"message": "Updated Card Message"})
@@ -113,7 +118,7 @@ def test_update_card_not_found(client):
     assert response.status_code == 404
     assert response_body == {"message":"Card 1 not found."}
 
-
+# @pytest.mark.skip
 def test_delete_card(client, one_card):
     # Act
     response = client.delete("/cards/1")
@@ -133,7 +138,7 @@ def test_delete_card(client, one_card):
     assert response_body == {"message":"Card 1 not found."}
 
 
-
+# @pytest.mark.skip
 def test_delete_card_not_found(client):
     # Act
     response = client.delete("/cards/1")
@@ -144,7 +149,7 @@ def test_delete_card_not_found(client):
     assert response_body == {"message":"Card 1 not found."}
 
 
-
+# @pytest.mark.skip
 def test_create_card_missing_message(client):
     # Act
     response = client.post("/cards", json={})

@@ -1,6 +1,7 @@
 from flask import Blueprint, abort, make_response, request, Response
 from ..db import db
 from ..models.board import Board
+from ..models.card import Card
 from .route_utilities import validate_model, create_model
 import requests
 import os
@@ -54,3 +55,60 @@ def delete_board(board_id):
 
     return response
 
+
+@boards_bp.post("/<board_id>/cards")
+def create_card_for_board(board_id):
+    board = validate_model(Board, board_id) 
+    request_body = request.get_json()
+
+    try:
+        new_card = Card(
+            message=request_body["message"],
+            like_count=request_body.get("like_count", 0),
+            board_id=board.id
+        )
+
+        db.session.add(new_card)
+        db.session.commit()
+
+
+        return {
+            "card": new_card.to_dict(),
+            "board_id": board.id
+        }, 201
+
+    except KeyError:
+        response = {"details": "Invalid data"}
+        abort(make_response(response, 400))
+
+
+# @boards_bp.get("/<board_id>/cards")
+# def get_cards_by_board(board_id):
+#     board = validate_model(Board, board_id)
+#     board_dict = board.to_dict()
+#     board_dict["cards"] = []
+
+#     for card in board.cards:
+#         board_dict["cards"].append(card.to_dict())
+
+#     return board_dict, 200
+
+@boards_bp.get("/<board_id>/cards")
+def get_cards_by_board(board_id):
+    board = validate_model(Board, board_id)
+  
+    response_body = {
+        "id": board.id,  # Add this line to include the board ID
+        "title": board.title,
+        "owner": board.owner,
+        "cards": [
+            {
+                "id": card.id,
+                "message": card.message,
+                "like_count": card.like_count,
+            }
+            for card in board.cards
+        ],
+    }
+
+    return response_body, 200
