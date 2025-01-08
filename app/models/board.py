@@ -24,3 +24,5 @@ class Board(db.Model):
             title=board_data["title"],
             owner=board_data["owner"],
         )
+
+        
