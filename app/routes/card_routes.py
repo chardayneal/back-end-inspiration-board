@@ -60,4 +60,5 @@ def like_card(card_id):
     card = validate_model(Card, card_id)
     card.like_count += 1
     
+    db.session.commit()
     return card.to_dict(), 200
